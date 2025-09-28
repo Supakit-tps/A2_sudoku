@@ -1,22 +1,10 @@
 boolean valid = true;
-int select[] = {0,0};
 int row = 9;
 int col = 9;
 int cell_size = 50;
 int space=20;
 int x = -1;
 int y = -1;
-int user_input[][] = {
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0}
-};
 int board[][] =  {
     {5,3,0,0,7,0,0,0,0},
     {6,0,0,1,9,5,0,0,0},
@@ -30,7 +18,7 @@ int board[][] =  {
 };
 
 void sudokutable(){
-    stroke(1);
+    stroke(0);
     fill(255);
     int i = 0;
     while(i < 9){
@@ -56,8 +44,8 @@ void sudokutable(){
     }
     drawnum();
 }
+
 void drawnum(){
-    textSize(15);
     fill(0);
     int m = 0;
     while (m < row){
@@ -66,10 +54,6 @@ void drawnum(){
             int num = 0;
             if(board[m][n] != 0){
                 num = board[m][n];
-                text(int(num), n*cell_size + cell_size/2+space, m*cell_size + cell_size/2+space);
-            }
-            else if(user_input[m][n] != 0){
-                num = user_input[m][n];
                 text(int(num), n*cell_size + cell_size/2+space, m*cell_size + cell_size/2+space);
             }
             n+=1;
@@ -85,24 +69,55 @@ void pressed(){
     x=(x-space)/cell_size;
     y=(y-space)/cell_size;
     }
+}
+
+void select(){
     if((x>=0)&&(y>=0)&&(x<row)&&(y<col)){
         highlight();
         rect(x*cell_size+space,y*cell_size+space,cell_size,cell_size);
+        int i = 0;
+        while(i<9){
+            int j = 0;
+            while(j<9){
+                if((board[i][j]==board[y][x])&&(board[i][j]!=0)){
+                    highlight();
+                    rect(j*cell_size+space,i*cell_size+space,cell_size,cell_size);
+                }
+                j+=1;
+            }
+            i+=1;
+        }
     }
 }
+
 void highlight(){
     noStroke();
     fill(255,230,120,120);   
 }
+
+void botton(){
+    stroke(0);
+    strokeWeight(2);
+    int i=0;
+    int n=1;
+    while(i<9){
+        fill(255);
+        rect(i*cell_size+space,10*cell_size+space,cell_size,cell_size);
+        fill(0);
+        text(n,i*cell_size+space+cell_size/2,10*cell_size+cell_size/2+space);
+        i+=1;
+        n+=1;
+    }
+}
 void setup() {
     fullScreen();
     textAlign(CENTER,CENTER);
-    textSize(15);
+    textSize(40);
 }
 
 void draw() {
     background(255);
     sudokutable();
-    drawnum();
     pressed();
+    botton();
 }
