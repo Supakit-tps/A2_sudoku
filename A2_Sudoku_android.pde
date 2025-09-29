@@ -3,8 +3,10 @@ int row = 9;
 int col = 9;
 int cell_size = 50;
 int space=20;
-int x = -1;
-int y = -1;
+int x=-1;
+int y=-1;
+int a=0;
+int b=0;
 int board[][] =  {
     {5,3,0,0,7,0,0,0,0},
     {6,0,0,1,9,5,0,0,0},
@@ -46,7 +48,6 @@ void sudokutable(){
 }
 
 void drawnum(){
-    fill(0);
     int m = 0;
     while (m < row){
         int n = 0;
@@ -54,6 +55,7 @@ void drawnum(){
             int num = 0;
             if(board[m][n] != 0){
                 num = board[m][n];
+                fill(0);
                 text(int(num), n*cell_size + cell_size/2+space, m*cell_size + cell_size/2+space);
             }
             n+=1;
@@ -88,6 +90,7 @@ void select(){
             i+=1;
         }
     }
+    
 }
 
 void highlight(){
@@ -99,18 +102,35 @@ void botton(){
     stroke(0);
     strokeWeight(2);
     int i=0;
-    int n=1;
     while(i<9){
         fill(255);
         rect(i*cell_size+space,10*cell_size+space,cell_size,cell_size);
         fill(0);
-        text(n,i*cell_size+space+cell_size/2,10*cell_size+cell_size/2+space);
+        text(i+1,i*cell_size+space+cell_size/2,10*cell_size+cell_size/2+space);
         i+=1;
-        n+=1;
+    }
+    if((x>=0)&&(y>=10)&&(x<row)&&(y<11)){
+        fill(255,200,200,150);
+        rect(x*cell_size+space,y*cell_size+space,cell_size,cell_size);
     }
 }
+
+void input_num(){
+    if((x>=0)&&(y>=0)&&(x<row)&&(y<col)){
+        if(board[y][x]==0){
+            a=y;
+            b=x; 
+        }
+    }
+    if((x>=0)&&(y>=10)&&(x<row)&&(y<11)){
+        if(board[a][b]==0){
+            board[a][b]=x+1;
+        }
+    }
+}
+
 void setup() {
-    fullScreen();
+    size(displayWidth,displayHeight);
     textAlign(CENTER,CENTER);
     textSize(40);
 }
@@ -119,5 +139,7 @@ void draw() {
     background(255);
     sudokutable();
     pressed();
+    select();
     botton();
+    input_num();
 }
