@@ -5,8 +5,8 @@ int cell_size = 50;
 int space=20;
 int x=-1;
 int y=-1;
-int a=0;
-int b=0;
+int a=-1;
+int b=-1;
 int board[][] =  {
     {5,3,0,0,7,0,0,0,0},
     {6,0,0,1,9,5,0,0,0},
@@ -57,6 +57,20 @@ void drawnum(){
                 num = board[m][n];
                 fill(0);
                 text(int(num), n*cell_size + cell_size/2+space, m*cell_size + cell_size/2+space);
+            }
+            if((x>=0)&&(y>9)&&(a>=0)){
+                if(board[a][b]!=0){
+                    if(valid==true){
+                        num = board[a][b];
+                        fill(0,255,0);
+                        text(int(num), b*cell_size + cell_size/2+space, a*cell_size + cell_size/2+space);
+                    }
+                    if(valid==false){
+                        num = board[a][b];
+                        fill(255,0,0);
+                        text(int(num), b*cell_size + cell_size/2+space, a*cell_size + cell_size/2+space);
+                    }
+                }
             }
             n+=1;
         }
@@ -122,10 +136,52 @@ void input_num(){
             b=x; 
         }
     }
-    if((x>=0)&&(y>=10)&&(x<row)&&(y<11)){
+    if((x>=0)&&(y>=10)&&(x<row)&&(y<11)&&(a>=0)){
         if(board[a][b]==0){
             board[a][b]=x+1;
         }
+        if((board[a][b]!=0)&&(valid==false)){
+            board[a][b]=x+1;     
+        }
+    }
+}
+
+void checking_input(){
+    valid = true;
+    int c=0;
+    if((x>=0)&&(y>9)&&(a>=0)){
+        if(board[a][b]!=0){
+            int j = 0;
+            while(j<9){
+                if(board[a][b]==board[a][j]){
+                    c+=1;
+                }
+                j+=1;
+            }
+            int i=0;
+            while(i<9){
+                if(board[a][b]==board[i][b]){
+                    c+=1;
+                }
+                i+=1;
+            }
+            i=0;
+            int aa=(a/3)*3;
+            int bb=(b/3)*3;
+            while(i<3){
+                j=0;
+                while(j<3){
+                    if(board[a][b]==board[aa+i][bb+j]){
+                        c+=1;
+                    }
+                    j+=1;
+                }
+                i+=1;
+            } 
+        }
+    }
+    if(c>3){
+        valid = false;
     }
 }
 
@@ -142,4 +198,5 @@ void draw() {
     select();
     botton();
     input_num();
+    checking_input();
 }
