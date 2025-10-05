@@ -7,17 +7,27 @@ int x=-1;
 int y=-1;
 int a=-1;
 int b=-1;
-int board[][] =  {
-    {5,3,0,0,7,0,0,0,0},
-    {6,0,0,1,9,5,0,0,0},
-    {0,9,8,0,0,0,0,6,0},
-    {8,0,0,0,6,0,0,0,3},
-    {4,0,0,8,0,3,0,0,1},
-    {7,0,0,0,2,0,0,0,6},
-    {0,6,0,0,0,0,2,8,0},
-    {0,0,0,4,1,9,0,0,5},
-    {0,0,0,0,8,0,0,7,9}
-};
+int board[][] = new int[9][9];
+int ran=int(random(0,8));
+int countdown=0;
+
+void loadSudokuBoard(String filename) {
+    String[] lines = loadStrings(filename); 
+    int i=0;
+    int n=10;
+    n=n*ran;
+    while(i < 9){
+        String line = lines[n].trim(); 
+        int j=0;
+        while(j < 9){
+            board[i][j] = line.charAt(j) - '0'; 
+            j+=1;
+        }
+        i+=1;
+        n+=1;
+    }
+  }
+
 
 void sudokutable(){
     stroke(0);
@@ -45,6 +55,8 @@ void sudokutable(){
         i+=1;
     }
     drawnum();
+    fill(0);
+        text("wrong"+countdown+"/3",width/2,cell_size*9+space+cell_size/2);
 }
 
 void drawnum(){
@@ -60,13 +72,12 @@ void drawnum(){
             }
             if((x>=0)&&(y>9)&&(a>=0)){
                 if(board[a][b]!=0){
+                    num = board[a][b];
                     if(valid==true){
-                        num = board[a][b];
                         fill(0,255,0);
                         text(int(num), b*cell_size + cell_size/2+space, a*cell_size + cell_size/2+space);
                     }
                     if(valid==false){
-                        num = board[a][b];
                         fill(255,0,0);
                         text(int(num), b*cell_size + cell_size/2+space, a*cell_size + cell_size/2+space);
                     }
@@ -132,6 +143,7 @@ void botton(){
 void input_num(){
     if((x>=0)&&(y>=0)&&(x<row)&&(y<col)){
         if(board[y][x]==0){
+            valid = true;
             a=y;
             b=x; 
         }
@@ -140,14 +152,17 @@ void input_num(){
         if(board[a][b]==0){
             board[a][b]=x+1;
         }
-        if((board[a][b]!=0)&&(valid==false)){
-            board[a][b]=x+1;     
+        if(valid==false){
+            board[a][b]=x+1;  
+            if((board[a][b]!=0)){
+                board[a][b]=0;     
+            }
         }
+        
     }
 }
 
 void checking_input(){
-    valid = true;
     int c=0;
     if((x>=0)&&(y>9)&&(a>=0)){
         if(board[a][b]!=0){
@@ -182,6 +197,15 @@ void checking_input(){
     }
     if(c>3){
         valid = false;
+        countdown+=1;
+    }
+    if(countdown>=3){
+        valid=false;
+        fill(255);
+        rect(0,0,width,height);
+        fill(255,0,0);
+        textSize(100);
+        text("Gameover",width/2,height/3);
     }
 }
 
@@ -189,6 +213,7 @@ void setup() {
     size(displayWidth,displayHeight);
     textAlign(CENTER,CENTER);
     textSize(40);
+    loadSudokuBoard("Tablenum.txt");
 }
 
 void draw() {
